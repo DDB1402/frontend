@@ -1,6 +1,6 @@
 /* eslint-disable no-await-in-loop */
-const bluebird = require('bluebird');
-const haiku = require('./haiku');
+const bluebird = require("bluebird");
+const haiku = require("./haiku");
 
 const MAX_TRIES = 10;
 
@@ -8,11 +8,15 @@ const users = {};
 
 // Random ID until the ID is not in used or max tries is reached
 async function randomID(counter = 0) {
-  if (counter > MAX_TRIES) {
-    return null;
-  }
-  await bluebird.delay(10);
-  const id = haiku();
+  // if (counter > MAX_TRIES) {
+  //   return null;
+  // }
+  // await bluebird.delay(10);
+  // const id = haiku();
+  // return id in users ? randomID(counter + 1) : id;
+  const arr = ["id1", "id2", "id3"];
+  const index = Math.floor(Math.random() * 3);
+  const id = arr[index];
   return id in users ? randomID(counter + 1) : id;
 }
 
