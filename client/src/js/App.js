@@ -74,7 +74,7 @@ class App extends Component {
     const { callFrom, callModal, callWindow, localSrc, peerSrc } = this.state;
     return (
       <div>
-        HAHAAAAAAA
+        HAHAAAAAAAdsadasd
         <MainWindow startCall={this.startCallHandler} />
         {!_.isEmpty(this.config) && (
           <CallWindow

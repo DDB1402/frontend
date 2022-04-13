@@ -1,5 +1,5 @@
-const io = require('socket.io');
-const users = require('./users');
+const io = require("socket.io");
+const users = require("./users");
 
 /**
  * Initialize when a connection is made
@@ -8,42 +8,53 @@ const users = require('./users');
 function initSocket(socket) {
   let id;
   socket
-    .on('init', async () => {
+    .on("init", async () => {
       id = await users.create(socket);
       if (id) {
-        socket.emit('init', { id });
+        socket.emit("init", { id });
       } else {
-        socket.emit('error', { message: 'Failed to generating user id' });
+        socket.emit("error", { message: "Failed to generating user id" });
       }
     })
-    .on('request', (data) => {
+    .on("connect", () => console.log("Connection socket"))
+    .on("request", (data) => {
       const receiver = users.get(data.to);
       if (receiver) {
-        receiver.emit('request', { from: id });
+        receiver.emit("request", { from: id });
       }
     })
-    .on('call', (data) => {
+    .on("call", (data) => {
       const receiver = users.get(data.to);
       if (receiver) {
-        receiver.emit('call', { ...data, from: id });
+        receiver.emit("call", { ...data, from: id });
       } else {
-        socket.emit('failed');
+        socket.emit("failed");
       }
     })
-    .on('end', (data) => {
+    .on("end", (data) => {
       const receiver = users.get(data.to);
       if (receiver) {
-        receiver.emit('end');
+        receiver.emit("end");
       }
     })
-    .on('disconnect', () => {
+    .on("disconnect", () => {
       users.remove(id);
-      console.log(id, 'disconnected');
+      console.log(id, "disconnected");
+    })
+    .on("connect_error", (error) => {
+      console.log(`${error}`);
     });
 }
 
 module.exports = (server) => {
-  io({ path: '/bridge', serveClient: false })
+  io({
+    path: "/bridge",
+    serveClient: true,
+    cors: {
+      origin: "*",
+      methods: ["GET", "POST", "PUT", "PATCH"],
+    },
+  })
     .listen(server, { log: true })
-    .on('connection', initSocket);
+    .on("connection", initSocket);
 };

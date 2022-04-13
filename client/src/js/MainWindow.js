@@ -1,15 +1,19 @@
-import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
-import socket from './socket';
+import React, { useEffect, useState } from "react";
+import PropTypes from "prop-types";
+import socket from "./socket";
 
 function useClientID() {
-  const [clientID, setClientID] = useState('');
+  const [clientID, setClientID] = useState("");
 
   useEffect(() => {
     socket
-      .on('init', ({ id }) => {
+      .on("init", ({ id }) => {
         document.title = `${id} - VideoCall`;
         setClientID(id);
+      })
+      .on("connect", () => console.log("Connection socket"))
+      .on("connect_error", (error) => {
+        console.log(`${error}`);
       });
   }, []);
 
@@ -69,7 +73,7 @@ function MainWindow({ startCall }) {
 }
 
 MainWindow.propTypes = {
-  startCall: PropTypes.func.isRequired
+  startCall: PropTypes.func.isRequired,
 };
 
 export default MainWindow;
