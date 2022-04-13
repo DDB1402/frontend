@@ -6,6 +6,14 @@ const socket = require("./lib/socket");
 const app = express();
 const server = http.createServer(app);
 
+app.get("/", (req, res) => {
+  res.send("Hello World!");
+});
+
+app.get("/check", (req, res) => {
+  res.send("Hello World!");
+});
+
 app.use("/", express.static(`${__dirname}/../client/dist`));
 
 server.listen(config.PORT, () => {
